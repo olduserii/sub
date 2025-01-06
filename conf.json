@@ -57,7 +57,10 @@
       "endpoint_independent_nat": true,
       "stack": "mixed",
       "sniff": true,
-      "inet4_address": "172.19.0.1/28"
+      "address": [
+        "172.19.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ]
     },
     {
       "type": "mixed",
