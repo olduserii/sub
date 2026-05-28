@@ -1,129 +1,179 @@
 {
-  "log": {
-    "level": "panic"
-  },
   "dns": {
     "servers": [
-      {
-        "tag": "dns-remote",
-        "address": "https://dns.google/dns-query",
-        "address_resolver": "dns-direct",
-        "strategy": "ipv4_only"
-      },
-      {
-        "tag": "dns-direct",
-        "address": "https://120.53.53.53/dns-query",
-        "address_resolver": "dns-local",
-        "strategy": "ipv4_only",
-        "detour": "direct"
-      },
-      {
-        "tag": "dns-local",
-        "address": "local",
-        "detour": "direct"
-      },
-      {
-        "tag": "dns-block",
-        "address": "rcode://success"
-      }
+      "1.1.1.1",
+      "https://dns.adguard.com/dns-query"
     ],
-    "rules": [
-      {
-        "domain": "dns.google",
-        "server": "dns-direct"
-      },
-      {
-        "outbound": "any",
-        "server": "dns-direct"
-      }
-    ],
-    "independent_cache": true
+    "queryStrategy": "UseIPv4"
   },
   "inbounds": [
     {
-      "type": "direct",
-      "tag": "dns-in",
       "listen": "127.0.0.1",
-      "listen_port": 6450,
-      "override_address": "8.8.8.8",
-      "override_port": 53
+      "port": 10808,
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": true
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ],
+        "enabled": true,
+        "routeOnly": true
+      },
+      "tag": "socks"
     },
     {
-      "type": "tun",
-      "tag": "tun-in",
-      "interface_name": "tun0",
-      "auto_route": true,
-      "mtu": 9000,
-      "endpoint_independent_nat": true,
-      "stack": "mixed",
-      "sniff": true,
-      "address": [
-        "172.19.0.1/30",
-        "fdfe:dcba:9876::1/126"
-      ]
-    },
-    {
-      "type": "mixed",
-      "tag": "mixed-in",
       "listen": "127.0.0.1",
-      "listen_port": 2080,
-      "sniff": true
+      "port": 10809,
+      "protocol": "http",
+      "settings": {
+        "allowTransparent": false
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ],
+        "enabled": true,
+        "routeOnly": true
+      },
+      "tag": "http"
     }
   ],
+  "log": {
+    "access": "/private/var/mobile/Containers/Shared/AppGroup/4043B84E-AE69-4031-B437-5B80FE89A184/Library/Application Support/Xray/logs/access.log",
+    "dnsLog": true,
+    "loglevel": "Warning"
+  },
+
   "outbounds": [
     {
-      "type": "vless",
-      "tag": "proxy",
-      "server": "45.95.202.113",
-      "server_port": 6969,
-      "uuid": "934c0058-3f47-4e81-cb09-b35366a60af7",
-      "transport": {
-        "type": "http",
-        "host": "lk.megafon.ru/wp/nomoney/topup",
-        "path": "/",
-        "method": "GET"
+      "protocol": "trojan",
+      "tag": "trojan-1",
+      "settings": {
+        "servers": [
+          {
+            "address": "109.120.191.129",
+            "port": 8443,
+            "password": "sHNhd-NqwDMxdMKymMCxrdEXHxjL64db"
+          }
+        ]
       },
-      "packet_encoding": ""
+      "streamSettings": {
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": false,
+          "alpn": ["h2", "http/1.1"],
+          "fingerprint": "qq",
+          "serverName": "pltwo.rushtaxi.ru"
+        }
+      }
     },
     {
-      "type": "direct",
+      "protocol": "trojan",
+      "tag": "trojan-2",
+      "settings": {
+        "servers": [
+          {
+            "address": "109.120.191.129",
+            "port": 7443,
+            "password": "sHNhd-NqwDMxdMKymMCxrdEXHxjL64db"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": false,
+          "alpn": ["h2", "http/1.1"],
+          "fingerprint": "qq",
+          "serverName": "plthree.rushtaxi.ru"
+        }
+      }
+    },
+    {
+      "protocol": "vless",
+      "tag": "vless-reality",
+      "settings": {
+        "vnext": [
+          {
+            "address": "46.243.142.228",
+            "port": 443,
+            "users": [
+              {
+                "id": "d7903de5-4954-4012-80de-f501676dfb20",
+                "encryption": "none",
+                "flow": "xtls-rprx-vision"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "fingerprint": "ios",
+          "publicKey": "B8ekmOgk9QTnXJJOR_4lDSUapa7PZvV2E37l1Nm4lxk",
+          "serverName": "ads.x5.ru",
+          "shortId": "f497fe3dff69ff78",
+          "spiderX": "/",
+          "show": false
+        }
+      }
+    },
+    {
+      "protocol": "freedom",
       "tag": "direct"
     },
     {
-      "type": "direct",
-      "tag": "bypass"
-    },
-    {
-      "type": "block",
+      "protocol": "blackhole",
       "tag": "block"
-    },
-    {
-      "type": "dns",
-      "tag": "dns-out"
     }
   ],
-  "route": {
+
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "domainMatcher": "hybrid",
     "rules": [
       {
-        "port": 53,
-        "outbound": "dns-out"
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
       },
       {
-        "inbound": "dns-in",
-        "outbound": "dns-out"
+        "protocol": ["bittorrent"],
+        "outboundTag": "direct"
       },
+
       {
-        "source_ip_cidr": [
-          "224.0.0.0/3",
-          "ff00::/8"
+        "domain": [
+          "domain:2gis.ru",
+          "domain:ads.x5.ru",
+          "domain:avito.ru",
+          "domain:vk.com",
+          "domain:yandex.ru",
+          "domain:mail.ru"
         ],
-        "ip_cidr": [
-          "224.0.0.0/3",
-          "ff00::/8"
-        ],
-        "outbound": "block"
+        "outboundTag": "direct"
+      },
+
+      {
+        "network": "tcp,udp",
+        "balancerTag": "Balancer"
       }
     ],
-    "auto_detect_interface": true
+    "balancers": [
+      {
+        "tag": "Balancer",
+        "selector": ["direct"]
+      }
+    ]
   }
 }
