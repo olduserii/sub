@@ -1,179 +1,72 @@
-{
-  "dns": {
-    "servers": [
-      "1.1.1.1",
-      "https://dns.adguard.com/dns-query"
-    ],
-    "queryStrategy": "UseIPv4"
-  },
-  "inbounds": [
-    {
-      "listen": "127.0.0.1",
-      "port": 10808,
-      "protocol": "socks",
-      "settings": {
-        "auth": "noauth",
-        "udp": true
-      },
-      "sniffing": {
-        "destOverride": [
-          "http",
-          "tls",
-          "quic"
-        ],
-        "enabled": true,
-        "routeOnly": true
-      },
-      "tag": "socks"
+"outbounds": [
+  {
+    "protocol": "trojan",
+    "tag": "🇵🇱 Trojan-1",
+    "settings": {
+      "servers": [
+        {
+          "address": "109.120.191.129",
+          "port": 8443,
+          "password": "sHNhd-NqwDMxdMKymMCxrdEXHxjL64db"
+        }
+      ]
     },
-    {
-      "listen": "127.0.0.1",
-      "port": 10809,
-      "protocol": "http",
-      "settings": {
-        "allowTransparent": false
-      },
-      "sniffing": {
-        "destOverride": [
-          "http",
-          "tls",
-          "quic"
-        ],
-        "enabled": true,
-        "routeOnly": true
-      },
-      "tag": "http"
+    "streamSettings": {
+      "network": "tcp",
+      "security": "tls",
+      "tlsSettings": {
+        "serverName": "pltwo.rushtaxi.ru"
+      }
     }
-  ],
-  "log": {
-    "access": "/private/var/mobile/Containers/Shared/AppGroup/4043B84E-AE69-4031-B437-5B80FE89A184/Library/Application Support/Xray/logs/access.log",
-    "dnsLog": true,
-    "loglevel": "Warning"
   },
 
-  "outbounds": [
-    {
-      "protocol": "trojan",
-      "tag": "trojan-1",
-      "settings": {
-        "servers": [
-          {
-            "address": "109.120.191.129",
-            "port": 8443,
-            "password": "sHNhd-NqwDMxdMKymMCxrdEXHxjL64db"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": false,
-          "alpn": ["h2", "http/1.1"],
-          "fingerprint": "qq",
-          "serverName": "pltwo.rushtaxi.ru"
+  {
+    "protocol": "trojan",
+    "tag": "🇵🇱 Trojan-2",
+    "settings": {
+      "servers": [
+        {
+          "address": "109.120.191.129",
+          "port": 7443,
+          "password": "sHNhd-NqwDMxdMKymMCxrdEXHxjL64db"
         }
+      ]
+    },
+    "streamSettings": {
+      "network": "tcp",
+      "security": "tls",
+      "tlsSettings": {
+        "serverName": "plthree.rushtaxi.ru"
       }
-    },
-    {
-      "protocol": "trojan",
-      "tag": "trojan-2",
-      "settings": {
-        "servers": [
-          {
-            "address": "109.120.191.129",
-            "port": 7443,
-            "password": "sHNhd-NqwDMxdMKymMCxrdEXHxjL64db"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": false,
-          "alpn": ["h2", "http/1.1"],
-          "fingerprint": "qq",
-          "serverName": "plthree.rushtaxi.ru"
-        }
-      }
-    },
-    {
-      "protocol": "vless",
-      "tag": "vless-reality",
-      "settings": {
-        "vnext": [
-          {
-            "address": "46.243.142.228",
-            "port": 443,
-            "users": [
-              {
-                "id": "d7903de5-4954-4012-80de-f501676dfb20",
-                "encryption": "none",
-                "flow": "xtls-rprx-vision"
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "reality",
-        "realitySettings": {
-          "fingerprint": "ios",
-          "publicKey": "B8ekmOgk9QTnXJJOR_4lDSUapa7PZvV2E37l1Nm4lxk",
-          "serverName": "ads.x5.ru",
-          "shortId": "f497fe3dff69ff78",
-          "spiderX": "/",
-          "show": false
-        }
-      }
-    },
-    {
-      "protocol": "freedom",
-      "tag": "direct"
-    },
-    {
-      "protocol": "blackhole",
-      "tag": "block"
     }
-  ],
+  },
 
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-    "domainMatcher": "hybrid",
-    "rules": [
-      {
-        "domain": ["geosite:category-ads-all"],
-        "outboundTag": "block"
-      },
-      {
-        "protocol": ["bittorrent"],
-        "outboundTag": "direct"
-      },
-
-      {
-        "domain": [
-          "domain:2gis.ru",
-          "domain:ads.x5.ru",
-          "domain:avito.ru",
-          "domain:vk.com",
-          "domain:yandex.ru",
-          "domain:mail.ru"
-        ],
-        "outboundTag": "direct"
-      },
-
-      {
-        "network": "tcp,udp",
-        "balancerTag": "Balancer"
+  {
+    "protocol": "vless",
+    "tag": "🇩🇪 VLESS-REALITY",
+    "settings": {
+      "vnext": [
+        {
+          "address": "46.243.142.228",
+          "port": 443,
+          "users": [
+            {
+              "id": "d7903de5-4954-4012-80de-f501676dfb20",
+              "encryption": "none",
+              "flow": "xtls-rprx-vision"
+            }
+          ]
+        }
+      ]
+    },
+    "streamSettings": {
+      "network": "tcp",
+      "security": "reality",
+      "realitySettings": {
+        "serverName": "ads.x5.ru",
+        "publicKey": "B8ekmOgk9QTnXJJOR_4lDSUapa7PZvV2E37l1Nm4lxk",
+        "shortId": "f497fe3dff69ff78"
       }
-    ],
-    "balancers": [
-      {
-        "tag": "Balancer",
-        "selector": ["direct"]
-      }
-    ]
+    }
   }
-}
+]
